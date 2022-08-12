@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operating System visualization</title>
+    <link rel="stylesheet" text="text/css" href="style.css">
+</head>
+
+<body>
+ 
+    <script src="https://unpkg.com/axios@0.21.1/dist/axios.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.1/papaparse.min.js"
+    integrity="sha512-EbdJQSugx0nVWrtyK3JdQQ/03mS3Q1UiAhRtErbwl1YL/+e2hZdlIcSURxxh7WXHTzn83sjlh2rysACoJGfb6g=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <canvas id="doughnut-chart" width="390" height="200"></canvas>
+    <script>
+        data = {
+            labels: [],
+            datasets: [{
+                label: "Number of user",
+                data: [],
+                backgroundColor: [],
+            }]
+        }
+        const config = {
+            type: 'doughnut',
+            data,
+            options: {
+                title: {
+                    display: true,
+                    text: 'Users By OS'
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+
+                }
+
+            }
+        };
+        // os- wise visulization
+        const os_label = []
+        const os_counter = []
+        Papa.parse("os.csv", {
+            download: true,
+            header: true,
+            complete: function (results) {
+                for (i = 0; i < results.data.length; i++) {
+                    os_label.push(results.data[i].Os)
+                    os_counter.push(results.data[i].Frequency)
+                }
+
+                console.log(os_label)
+                console.log(os_counter);
+
+            },
+        });
+        const os_chart = new Chart(document.getElementById("doughnut-chart"), config);
+        os_chart.data.labels = os_label
+        os_chart.data.datasets[0].data =os_counter
+        os_chart.data.datasets[0].backgroundColor = ["#3e95cd","#8e5ea2","#3cba9f","#e8c3b9","#c45850","#AB0D6A","#360CCD","#72B767","#FAC1F2","#6F2D40"]
+        os_chart.update();
+
+    </script>
+    <!-- <script>
+        $(document).ready(function () {
+            $.ajax({
+                type: "GET",
+                url: "os.csv",
+                dataType: "text",
+                success: async function (data) {
+                    let os_list = data.split(",");
+
+                    console.log(os_list)
+                    new Chart(document.getElementById("doughnut-chart"), {
+                        type: 'doughnut',
+                        data: {
+                            labels:
+                                [os_list[0], os_list[2], os_list[4], os_list[6], os_list[8], os_list[10], os_list[12], os_list[14], os_list[16], os_list[18]],
+                            datasets: [
+                                {
+                                    label: "Number of users",
+                                    backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850", "#AB0D6A", "#360CCD", "#72B767", "#FAC1F2", "#6F2D40"],
+                                    data: [os_list[1], os_list[3], os_list[5], os_list[7], os_list[9], os_list[11], os_list[13], os_list[15], os_list[17], os_list[19]]
+                                }
+                            ]
+                        },
+                        options: {
+                            title: {
+                                display: true,
+                                text: 'Users By Operating System'
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+    </script> -->
+
+
+
+</html>

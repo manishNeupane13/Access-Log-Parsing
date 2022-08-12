@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Date and Time visualization </title>
+    <link rel="stylesheet" text="text/css" href="style.css">
+</head>
+<style>
+    body {
+        background-color: whitesmoke;
+    }
+</style>
+
+<body>
+    
+    <script src="https://unpkg.com/axios@0.21.1/dist/axios.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.1/papaparse.min.js"
+    integrity="sha512-EbdJQSugx0nVWrtyK3JdQQ/03mS3Q1UiAhRtErbwl1YL/+e2hZdlIcSURxxh7WXHTzn83sjlh2rysACoJGfb6g=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <canvas id="bar-chart" width="500" height="200"></canvas>
+    <script>
+         data={
+            labels:[],
+            datasets:[{
+                label:"Number of user",
+                data:[],
+                backgroundColor:[],
+            }]
+        }
+        const config={
+            type:'bar',
+            data,
+            options:{
+                title: {
+                    display: true,
+                    text: 'Users By Date'
+                },
+                scales:{
+                    y:{
+                        beginAtZero:true
+                    }
+                    
+                }
+                
+            }
+        };
+        // date- wise visulization
+        const date_list=[]
+        const date_counter=[]
+        Papa.parse("date.csv", {
+            download: true,
+            header:true,
+            complete: function (results ) {
+                for (i=0; i<results.data.length;i++)
+                {
+                    date_list.push(results.data[i].Date)
+                    date_counter.push(results.data[i].Frequency)
+                }
+                
+                // console.log(date_list[0])
+                // console.log(date_counter);
+                
+            },
+        });
+        const date_chart=new Chart(document.getElementById("bar-chart"), config);
+        date_chart.data.labels=date_list
+        date_chart.data.datasets[0].data=date_counter 
+        date_chart.data.datasets[0].backgroundColor= "#3e95cd"
+        date_chart.update();
+        
+        </script>
+ <canvas id="bar-chart1" width="500" height="200"></canvas>
+ <script>  
+   data = {
+        labels: [],
+        datasets: [{
+            label: "Number of user",
+            data: [],
+            backgroundColor: [],
+        }]
+    }             
+    const configure= {
+            type: 'bar',
+            data,
+            options: {
+                title: {
+                    display: true,
+                    text: 'Users By Hour'
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+
+                }
+
+            }
+        };
+                hour_label=[]
+                hour_counter=[]
+                Papa.parse("hour.csv",
+                {
+                    download:true,
+                    header:true,
+                    complete:function(results )
+                    {
+                        for (i = 0; i < results.data.length; i++) {
+                            hour_label.push(results.data[i].Hour)
+                            hour_counter.push(results.data[i].Frequency)
+                        }
+                        console.log(hour_label)
+                        console.log(hour_counter)
+                    }
+                }
+                
+                );
+                const hour_chart = new Chart(document.getElementById("bar-chart1"), configure);
+                    hour_chart.data.labels = hour_label
+                    hour_chart.data.datasets[0].data =hour_counter
+                    hour_chart.data.datasets[0].backgroundColor ="#CA4A3B"
+                    hour_chart.update();
+            
+        </script>
+</body>
+
+</html>

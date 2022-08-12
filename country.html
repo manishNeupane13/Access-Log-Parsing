@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Country Wise IP Address</title>
+</head>
+
+<body>
+    <script src="https://unpkg.com/axios@0.21.1/dist/axios.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                type: "GET",
+                url: "ip.csv",
+                dataType: "text",
+                success: async function (data) {
+                    let ipaddress = data.split("\r\n");
+                    let details = [];
+
+                    for (let i = 0; i < 250; i++) {
+                        let resp = await fetch(`http://geoip-db.com/json/${ipaddress[i]}`, { method: "GET" }).then(res => res.json())
+                        details[i] = resp;
+                    }
+
+                    let newarray = details.filter((thing, index, self) =>
+                        index === self.findIndex((t) => (
+                            t.country_name === thing.country_name
+                        ))
+                    )
+                    // console.log(details);
+                    // console.log(newarray);
+
+                    let final = []
+
+                    for (let i = 0; i < newarray.length; i++) {
+                        let obj = ["", 0]
+                        obj[0] = newarray[i].country_name;
+
+                        let count = details.filter(i => i.country_name === obj[0]).length
+
+                        obj[1] = count;
+
+                        final.push(obj)
+                    }
+                    console.log(final)
+                    google.charts.load('current', {
+                        'packages': ['geochart'],
+                        'mapsApiKey': 'AIzaSyDeWmrMP9KptiKrcaZ61GTDpHab4CpRG8I'
+                    });
+                    google.charts.setOnLoadCallback(drawRegionsMap);
+
+                    function drawRegionsMap() {
+                        var data = google.visualization.arrayToDataTable([
+                            ['Country', 'IP Address'],
+                            ...final
+                        ]);
+
+                        var options = {};
+
+                        var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+
+                        chart.draw(data, options);
+                    }
+                }
+            });
+        });
+    </script>
+    <!--     -->
+    <script type="text/javascript">
+
+    </script>
+    <center>
+        <div id="regions_div"></div>
+    </center>
+</body>
+
+</html>

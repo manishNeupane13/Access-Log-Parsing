@@ -1,0 +1,42 @@
+      
+        .header
+        {
+            text-align: center;
+            margin-left: 8%;
+            margin-right: 8%;
+        }
+
+        
+        .navigation  table
+        { 
+            
+            margin-left: 18%;
+            margin-right: 18%
+            
+        }
+       
+        
+
+        a:link {
+            text-decoration: none;
+            text-align: center;
+
+        }
+
+        
+        th {
+            padding: 10px;
+            
+            
+
+
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Courier New', Courier, monospace;
+            border: 2px solid whitesmoke;
+            background-color: whitesmoke;
+            color: tomato;
+            padding: 20px;
+        }
